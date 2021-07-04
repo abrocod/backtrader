@@ -55,6 +55,7 @@ from .cci import *
 from .crossover import *
 from .dpo import *
 from .directionalmove import *
+from .donchian import *
 from .envelope import *
 from .heikinashi import *
 from .lrsi import *

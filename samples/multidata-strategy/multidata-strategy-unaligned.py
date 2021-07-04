@@ -165,11 +165,11 @@ def parse_args():
     parser = argparse.ArgumentParser(description='MultiData Strategy')
 
     parser.add_argument('--data0', '-d0',
-                        default='../../datas/orcl-2003-2005.txt',
+                        default='datas/orcl-2003-2005.txt',
                         help='1st data into the system')
 
     parser.add_argument('--data1', '-d1',
-                        default='../../datas/yhoo-2003-2005.txt',
+                        default='datas/yhoo-2003-2005.txt',
                         help='2nd data into the system')
 
     parser.add_argument('--fromdate', '-f',

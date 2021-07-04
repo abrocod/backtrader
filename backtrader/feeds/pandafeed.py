@@ -72,6 +72,7 @@ class PandasDirectData(feed.DataBase):
 
         # Set the standard datafields - except for datetime
         for datafield in self.getlinealiases():
+            print(f'PandasDirectData - _load - {datafield}')
             if datafield == 'datetime':
                 continue
 
@@ -233,6 +234,8 @@ class PandasData(feed.DataBase):
 
     def _load(self):
         self._idx += 1
+        if self._idx % 1000 == 0:
+            print(f'PandasData - _load {self._idx}')
 
         if self._idx >= len(self.p.dataname):
             # exhausted all rows

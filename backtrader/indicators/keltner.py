@@ -2,7 +2,7 @@
 # -*- coding: utf-8; py-indent-offset:4 -*-
 ###############################################################################
 #
-# Copyright (C) 2015-2020 Daniel Rodriguez
+# Copyright (C) 2021 Jinchao Lin
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,38 +18,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
+
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import backtrader as bt
 
-from .csvgeneric import *
-from .btcsv import *
-from .vchartcsv import *
-from .vchart import *
-from .yahoo import *
-from .quandl import *
-from .sierrachart import *
-from .mt4csv import *
-from .pandafeed import *
-from .influxfeed import *
-from .firstrate import *
-try:
-    from .ibdata import *
-except ImportError:
-    pass  # The user may not have ibpy installed
-
-try:
-    from .vcdata import *
-except ImportError:
-    pass  # The user may not have something installed
-
-try:
-    from .oanda import OandaData
-except ImportError:
-    pass  # The user may not have something installed
+# https://analyzingalpha.com/keltner-channels
 
 
-from .vchartfile import VChartFile
+class keltnerChannel(bt.Indicator):
+    lines = ('upper', 'basis', 'lower',)
+    params = (
+        ('ema', 20), 
+        ('period', 10),
+        ('width', 2.25),
+        )
 
-from .rollover import RollOver
-from .chainer import Chainer
+    plotinfo = dict(subplot=False)  # plot along with data
+    plotlines = dict(
+        basis=dict(ls='--'),  # dashed line
+        upper=dict(_samecolor=True),  # use same color as prev line (mid)
+        lower=dict(_samecolor=True),  # use same color as prev line (upper)
+    )
+    
+    def __init__(self):
+        self.lines.basis = bt.ind.EMA(self.data, period=self.p.ema)
+        atr = bt.ind.ATR(self.data, period=self.p.period)
+        self.lines.upper = self.lines.basis + self.p.width * atr
+        self.lines.lower = self.lines.basis - self.p.width * atr
